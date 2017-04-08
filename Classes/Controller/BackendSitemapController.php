@@ -35,6 +35,8 @@ use TYPO3\CMS\Backend\Utility\BackendUtility as Typo3BackendUtility;
 use TYPO3\CMS\Backend\Utility\IconUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 
 /**
  * TYPO3 Backend module sitemap
@@ -180,6 +182,9 @@ class BackendSitemapController extends AbstractStandardModule
         $rootPageList = BackendUtility::getRootPageList();
         $rootPage     = $rootPageList[$rootPid];
 
+        /** @var IconFactory $iconFactory */
+        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+
         // ###############################
         // Fetch
         // ###############################
@@ -227,7 +232,8 @@ class BackendSitemapController extends AbstractStandardModule
 
             // Flag (if available)
             if (!empty($langRow['flag'])) {
-                $flag.= IconUtility::getSpriteIcon('flags-' . $langRow['flag']);
+//                $flag.= IconUtility::getSpriteIcon('flags-' . $langRow['flag']);
+                $flag .= $iconFactory->getIcon('flags-' . $langRow['flag'], Icon::SIZE_SMALL);
                 $flag .= '&nbsp;';
             }
 
@@ -270,9 +276,7 @@ class BackendSitemapController extends AbstractStandardModule
             'pagingSize'            => $this->getUiPagingSize(),
             'sortField'             => 'crdate',
             'sortDir'               => 'DESC',
-            'filterIcon'            => IconUtility::getSpriteIcon(
-                'actions-system-tree-search-open'
-            ),
+            'filterIcon'            => $iconFactory->getIcon('actions-system-tree-search-open', Icon::SIZE_SMALL),
             'dataLanguage'          => $languageList,
             'dataDepth'             => $depthList,
             'criteriaFulltext'      => '',
