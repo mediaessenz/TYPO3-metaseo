@@ -130,7 +130,7 @@ class RobotsTxtDefault
          * sets backPath to TYPO3_mainDir which is very bad in the Backend. Therefore,
          * we must set it back to null to not get frontend-prefixed asset URLs. See #150.
          */
-        $this->cleanUpPageRendererBackPath();
+        //$this->cleanUpPageRendererBackPath();
 
         return $content;
     }
