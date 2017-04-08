@@ -37,6 +37,8 @@ use Metaseo\Metaseo\Controller\Ajax\PageSeo\UrlController;
 use Metaseo\Metaseo\Utility\DatabaseUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\Utility\IconUtility;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -119,6 +121,9 @@ class BackendPageSeoController extends AbstractStandardModule
             return;
         }
 
+        /** @var IconFactory $iconFactory */
+        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+
         // Load PageTS
         $pageTsConf = BackendUtility::getPagesTSconfig($pageId);
 
@@ -166,7 +171,8 @@ class BackendPageSeoController extends AbstractStandardModule
 
             // Flag (if available)
             if (!empty($langRow['flag'])) {
-                $flag .= IconUtility::getSpriteIcon('flags-' . $langRow['flag']);
+                $flag .= $iconFactory->getIcon('flags-' . $langRow['flag'], Icon::SIZE_SMALL);
+//                $flag .= IconUtility::getSpriteIcon('flags-' . $langRow['flag']);
                 $flag .= '&nbsp;';
             }
 
@@ -206,9 +212,7 @@ class BackendPageSeoController extends AbstractStandardModule
             'depth'            => 2,
             'sortField'        => 'crdate',
             'sortDir'          => 'DESC',
-            'filterIcon'       => IconUtility::getSpriteIcon(
-                'actions-system-tree-search-open'
-            ),
+            'filterIcon'       => $iconFactory->getIcon('actions-system-tree-search-open', Icon::SIZE_SMALL),
             'dataLanguage'     => $languageList,
             'sysLanguage'      => $sysLanguageDefault,
             'listType'         => $listType,
@@ -292,7 +296,10 @@ class BackendPageSeoController extends AbstractStandardModule
 
     private function getIcon($iconName)
     {
-        $html = IconUtility::getSpriteIcon($iconName);
+        /** @var IconFactory $iconFactory */
+        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        $html = $iconFactory->getIcon($iconName);
+        //$html = IconUtility::getSpriteIcon($iconName);
         //Ugly workaround to make icons clickable in TYPO3 7.6.
         //It's deprecated anyways, therefore changes in the future when we drop support for 6.2.
         if (stripos('svg', $html)) {
